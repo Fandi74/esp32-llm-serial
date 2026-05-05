@@ -3,3 +3,23 @@
 .vscode/c_cpp_properties.json
 .vscode/launch.json
 .vscode/ipch
+
+# ── Credentials ────────────────────────────────────────────────────
+include/api.h
+ 
+# ── PlatformIO build artefacts ──────────────────────────────────────
+.pio/
+.pioenvs/
+.piolibdeps/
+ 
+# ── IDE ─────────────────────────────────────────────────────────────
+.vscode/
+.idea/
+*.swp
+*~
+ 
+# ── macOS ───────────────────────────────────────────────────────────
+.DS_Store
+ 
+# ── Logs ────────────────────────────────────────────────────────────
+*.log
