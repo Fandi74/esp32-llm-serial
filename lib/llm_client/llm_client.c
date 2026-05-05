@@ -70,7 +70,7 @@ static char *build_request_json(const char *model, const char *prompt)
 /* ------------------------------------------------------------------ */
 
 static esp_err_t parse_response(const char *json_str,
-                                char *out_buf, size_t out_len)
+                                 char *out_buf, size_t out_len)
 {
     cJSON *root = cJSON_Parse(json_str);
     if (!root) {
@@ -78,16 +78,38 @@ static esp_err_t parse_response(const char *json_str,
         return ESP_FAIL;
     }
 
+    /* Validate choices array exists and is an array */
     cJSON *choices = cJSON_GetObjectItemCaseSensitive(root, "choices");
-    cJSON *choice  = cJSON_GetArrayItem(choices, 0);
-    cJSON *message = cJSON_GetObjectItemCaseSensitive(choice, "message");
-    cJSON *content = cJSON_GetObjectItemCaseSensitive(message, "content");
-
-    if (!cJSON_IsString(content)) {
+    if (!choices || !cJSON_IsArray(choices)) {
+        ESP_LOGE(TAG, "Invalid or missing 'choices' in response");
         cJSON *err = cJSON_GetObjectItemCaseSensitive(root, "error");
         cJSON *msg = cJSON_GetObjectItemCaseSensitive(err, "message");
         if (cJSON_IsString(msg))
             ESP_LOGE(TAG, "API error: %s", msg->valuestring);
+        cJSON_Delete(root);
+        return ESP_FAIL;
+    }
+
+    /* Validate first choice exists */
+    cJSON *choice = cJSON_GetArrayItem(choices, 0);
+    if (!choice) {
+        ESP_LOGE(TAG, "No choices in response array");
+        cJSON_Delete(root);
+        return ESP_FAIL;
+    }
+
+    /* Validate message object exists */
+    cJSON *message = cJSON_GetObjectItemCaseSensitive(choice, "message");
+    if (!message) {
+        ESP_LOGE(TAG, "Missing 'message' in choice");
+        cJSON_Delete(root);
+        return ESP_FAIL;
+    }
+
+    /* Validate content exists and is a string */
+    cJSON *content = cJSON_GetObjectItemCaseSensitive(message, "content");
+    if (!cJSON_IsString(content)) {
+        ESP_LOGE(TAG, "Invalid or missing 'content' in message");
         cJSON_Delete(root);
         return ESP_FAIL;
     }
