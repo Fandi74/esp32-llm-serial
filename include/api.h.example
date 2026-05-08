@@ -1,0 +1,18 @@
+/*  CREDENTIALS — never commit this file                               */
+/*  Copy api.h.example → include/api.h and fill in your values        */
+/* ------------------------------------------------------------------ */
+
+#pragma once
+
+/* WiFi credentials */
+#define WIFI_SSID      "your_wifi_ssid"
+#define WIFI_PASSWORD  "your_wifi_password"
+
+/* OpenRouter API credentials */
+#define OPENROUTER_API_KEY  "sk-or-v1-your_api_key_here"
+#define OPENROUTER_MODEL    "meta-llama/llama-3.1-8b-instruct:free"
+
+/* Optional: Override defaults */
+/* #define WIFI_MAX_RETRY  5 */
+/* #define LLM_MAX_PROMPT_LEN    1024 */
+/* #define LLM_MAX_RESPONSE_LEN  8192 */

@@ -1,6 +1,16 @@
-# This file was automatically generated for projects
-# without default 'CMakeLists.txt' file.
+# Main component CMakeLists.txt
 
-FILE(GLOB_RECURSE app_sources ${CMAKE_SOURCE_DIR}/src/*.*)
+set(srcs
+    "main.c"
+)
 
-idf_component_register(SRCS ${app_sources})
+set(include_dirs
+    "."
+    "${CMAKE_SOURCE_DIR}/include"
+    "${CMAKE_SOURCE_DIR}/lib/wifi_manager"
+    "${CMAKE_SOURCE_DIR}/lib/llm_client"
+)
+
+idf_component_register(SRCS ${srcs}
+                     INCLUDE_DIRS ${include_dirs}
+                     REQUIRES wifi_manager llm_client)

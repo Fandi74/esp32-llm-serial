@@ -21,9 +21,7 @@
 static void repl_task(void *pvParameters)
 {
     char *input = malloc(LLM_MAX_PROMPT_LEN);
-    char *reply = heap_caps_malloc(LLM_MAX_RESPONSE_LEN,
-                                   MALLOC_CAP_SPIRAM | MALLOC_CAP_8BIT);
-    if (!reply) reply = malloc(LLM_MAX_RESPONSE_LEN);
+    char *reply = malloc(LLM_MAX_RESPONSE_LEN);
 
     if (!input || !reply) {
         ESP_LOGE(TAG, "Buffer alloc failed");
@@ -60,7 +58,7 @@ static void repl_task(void *pvParameters)
         printf("Assistant: thinking...\r\n");
 
         esp_err_t ret = llm_chat(OPENROUTER_API_KEY, OPENROUTER_MODEL,
-                                 input, reply, LLM_MAX_RESPONSE_LEN);
+                                  input, reply, LLM_MAX_RESPONSE_LEN);
 
         if (ret == ESP_OK)
             printf("\r\nAssistant: %s\r\n\r\n", reply);
@@ -70,6 +68,7 @@ static void repl_task(void *pvParameters)
 
     free(input);
     free(reply);
+    wifi_manager_disconnect();
     vTaskDelete(NULL);
 }
 
